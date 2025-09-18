@@ -1,0 +1,100 @@
+/* Estilo profesional para las opciones de compra */
+.custom-cart-options.professional-style {
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 20px;
+    background-color: #fff !important;
+    max-width: 100%;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    flex-direction: column !important;
+}
+
+.purchase-option {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 0px 5px 0px !important;
+    gap: 15px;
+    
+}
+
+.purchase-label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.purchase-label:hover {
+    border-color: #ff3c00;
+    background-color: #FFF8F6;
+}
+
+.option-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.option-title {
+    font-weight: bold;
+    color: #333;
+}
+
+.option-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ff3c00;
+}
+
+input[type="radio"] {
+    accent-color: #ff3c00 !important;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.custom-add-to-cart {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.button.alt {
+    background-color: #ff3c00 !important;
+    font-weight:700 !important;
+    color: #fff;
+    border: none;
+    border-radius: 9px !important;
+    padding: 15px 20px !important;
+    font-size: 1rem !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease ;
+    width: 100% !important;
+}
+
+.button.alt:hover {
+    background-color: #ff3c00 !important;
+}
+
+@media (max-width: 768px) {
+  .button.alt {
+    /* Ocupa el 100% del ancho del contenedor */
+    width: 100%;
+
+    /* Aumenta el padding vertical para que sea más alto y fácil de tocar */
+    padding: 10px 20px !important;
+
+    /* Opcional: Aumentar un poco la fuente para mejor legibilidad */
+    font-size: 1.1rem !important;
+
+    /* Asegura que el texto quede centrado */
+    text-align: center;
+  }
+}

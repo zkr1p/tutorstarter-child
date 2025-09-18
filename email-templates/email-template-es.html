@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descarga tu producto</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 0;
+            padding: 0;
+        }
+        .email-wrapper {
+            width: 100%;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+        }
+        .email-container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .email-header {
+            background-color: #e93700;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .email-body {
+            padding: 20px;
+        }
+        .email-body p {
+            margin: 0 0 15px;
+            line-height: 1.6;
+        }
+        .email-footer {
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        .email-footer a {
+            color: #e93700;
+            text-decoration: none;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            color: #ffffff;
+            background-color: #e93700;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #c62900;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="email-container">
+            <div class="email-header">
+                <h1>¡Gracias por tu compra!</h1>
+            </div>
+            <div class="email-body">
+                <p>Hola {{customer_name}},</p>
+                <p>¡Gracias por tu compra en <strong>Taxes4Pros</strong>!</p>
+                <p>Tu producto digital: <strong>{{product_list}}</strong> ya está disponible para descargar.</p>
+                <p>Haz clic en el siguiente enlace para acceder a tu cuenta y gestionar tus descargas:</p>
+                <p><a href="https://taxes4pros.com/cuenta/downloads/" class="btn">Acceder a mi cuenta</a></p>
+                <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos.</p>
+            </div>
+            <div class="email-footer">
+                <p>Gracias por confiar en Taxes4Pros.</p>
+                <p><a href="https://taxes4pros.com">Visítanos en nuestro sitio web</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

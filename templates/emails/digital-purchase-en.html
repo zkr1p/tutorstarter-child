@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download Your Product</title>
+    <style>body{font-family:'Arial',sans-serif;background-color:#f8f9fa;color:#343a40;margin:0;padding:0}.email-wrapper{width:100%;padding:20px 0;background-color:#f8f9fa}.email-container{background-color:#fff;max-width:600px;margin:0 auto;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}.email-header{background-color:#e93700;color:#fff;padding:20px;text-align:center}.email-header h1{margin:0;font-size:24px}.email-body{padding:20px}.email-body p{margin:0 0 15px;line-height:1.6}.email-footer{background-color:#f1f1f1;padding:20px;text-align:center;font-size:.9em;color:#6c757d}.email-footer a{color:#e93700;text-decoration:none}.btn{display:inline-block;padding:12px 20px;color:#fff!important;background-color:#e93700;text-decoration:none;border-radius:5px;margin-top:10px}.btn:hover{background-color:#c62900}</style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="email-container">
+            <div class="email-header"><h1>Thank You for Your Purchase!</h1></div>
+            <div class="email-body">
+                <p>Hi {{customer_name}},</p>
+                <p>Thank you for your purchase at <strong>Taxes4Pros</strong>!</p>
+                <p>Your digital product(s): <strong>{{product_list}}</strong> is/are now available for download.</p>
+                <p>Click the link below to access your account and manage your downloads:</p>
+                <p><a href="{{download_url}}" class="btn">Access My Account</a></p>
+                <p>If you have any questions or need assistance, feel free to reach out to us.</p>
+            </div>
+            <div class="email-footer">
+                <p>Thank you for choosing Taxes4Pros.</p>
+                <p><a href="{{site_url}}">Visit our website</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

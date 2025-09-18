@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Reserva Confirmada</title><style>body{font-family:Arial,sans-serif;background:#f8f9fa;color:#343a40;margin:0;padding:0}.email-wrapper{width:100%;padding:20px 0;background:#f8f9fa}.email-container{background:#fff;max-width:600px;margin:0 auto;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}.email-header{background:#e93700;color:#fff;padding:20px;text-align:center}.email-body{padding:20px}.email-body p{margin:0 0 15px;line-height:1.6}.email-footer{background:#f1f1f1;padding:20px;text-align:center;font-size:.9em;color:#6c757d}.btn{display:inline-block;padding:12px 20px;color:#fff!important;text-decoration:none;border-radius:5px;margin-top:10px;background-color:#ff3c00}.btn:hover{background-color:#c62900}</style></head>
+<body>
+<div class="email-wrapper"><div class="email-container">
+  <div class="email-header"><h1>¡Tu reserva está confirmada!</h1></div>
+  <div class="email-body">
+    <p>Hola {{customer_name}},</p>
+    <p>Gracias por tu reserva en nuestro sitio. Has apartado los siguientes productos:</p>
+    {{product_list}}
+    <p>Te avisaremos en cuanto estén disponibles para envío.</p>
+    <p><a href="{{order_url}}" class="btn">Ver mi pedido</a></p>
+  </div>
+  <div class="email-footer">
+    <p>Gracias por confiar en nosotros.</p>
+    <p><a href="{{site_url}}" class="btn">Volver al sitio</a></p>
+  </div>
+</div></div>
+</body></html>
