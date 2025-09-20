@@ -4,8 +4,6 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 // =========================================================================
 // CARGADOR PRINCIPAL DEL TEMA
-// Este archivo ahora solo se encarga de cargar las diferentes partes
-// de la funcionalidad del tema de forma ordenada.
 // =========================================================================
 
 $theme_includes = [
@@ -25,7 +23,6 @@ foreach ($theme_includes as $file) {
 
 // =========================================================================
 // INICIALIZACIÓN DEL SISTEMA DE E-BOOK OPTIMIZADO
-// Esta es la lógica que implementamos anteriormente para el producto variable.
 // =========================================================================
 
 add_action('init', function() {
@@ -46,22 +43,3 @@ add_action('init', function() {
         (new TutorstarterChild\ThemeController())->init();
     }
 });
-
-/**
- * Encola el script principal del tema y pasa los datos necesarios
- * desde PHP a JavaScript cuando es necesario.
- */
-add_action('wp_enqueue_scripts', function () {
-    $main_script_path = get_stylesheet_directory() . '/assets/js/main.js';
-    
-    if (file_exists($main_script_path)) {
-        wp_enqueue_script(
-            'tutorstarter-child-main-script',
-            get_stylesheet_directory_uri() . '/assets/js/main.js',
-            [],
-            filemtime($main_script_path),
-            true
-        );
-    }
-});
-

@@ -1,147 +1,91 @@
+<?php
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
+
 /**
- * Lógica de frontend para precios dinámicos y la UI del producto variable.
- * VERSIÓN FINAL: Lógica unificada y selectores de DOM robustos.
- * @author B. O.
- * @version 9.0.0
+ * =========================================================================
+ * SETUP Y CONFIGURACIÓN DEL TEMA HIJO (VERSIÓN FINAL Y DEPURABLE)
+ * =========================================================================
  */
-document.addEventListener('DOMContentLoaded', () => {
-    const body = document.body;
 
-    /**
-     * Lógica #1: Para páginas de producto variable.
-     * Se ejecuta de forma aislada y maneja su propia UI.
-     */
-    function handleVariableProductPage() {
-        // Esta lógica solo se ejecuta si estamos en una página de producto Y existe el objeto productPageData.
-        if (body.classList.contains('single-product') && typeof productPageData !== 'undefined') {
-            const container = document.getElementById('ebook-purchase-options-container');
-            if (productPageData.status === 'unavailable') {
-                if (container) container.style.display = 'none';
-                return;
-            }
-
-            const radioEbook = document.querySelector('input[name="purchase_option"][value="ebook"]');
-            const radioBook = document.querySelector('input[name="purchase_option"][value="book"]');
-            const btnDownload = document.getElementById('btn-download');
-            const btnBuy = document.getElementById('btn-buy');
-            const msgExhausted = document.getElementById('msg-exhausted');
-            const msgUnavailable = document.getElementById('msg-unavailable');
-            const ebookPriceEl = document.getElementById('ebook-price-placeholder');
-            const bookPriceEl = document.getElementById('book-price-placeholder');
-
-            function initializeStaticData() {
-                if (bookPriceEl && productPageData.book_price_html) {
-                    bookPriceEl.innerHTML = productPageData.book_price_html;
-                }
-                if (ebookPriceEl) {
-                    // Lógica anti-caché: Decidimos el precio basándonos en el 'status', no en el precio cacheado.
-                    if (productPageData.status === 'can_download') {
-                        ebookPriceEl.innerHTML = `<ins><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">$</span>0.00</bdi></span></ins>`;
-                    } else {
-                        ebookPriceEl.innerHTML = productPageData.ebook_price_html || '';
-                    }
-                }
-            }
-
-            function updateUI() {
-                if (!btnDownload || !btnBuy || !msgExhausted || !msgUnavailable || !radioBook) return;
-                btnDownload.style.display = 'none';
-                btnBuy.style.display = 'none';
-                msgExhausted.style.display = 'none';
-                msgUnavailable.style.display = 'none';
-                if (radioBook.checked) {
-                    btnBuy.style.display = 'block';
-                    btnBuy.dataset.link = productPageData.book_url;
-                } else {
-                    switch (productPageData.status) {
-                        case 'can_download':
-                            btnDownload.style.display = 'block';
-                            btnDownload.href = productPageData.download_page_url;
-                            break;
-                        case 'exhausted':
-                            msgExhausted.style.display = 'block';
-                            btnBuy.style.display = 'block';
-                            btnBuy.dataset.link = productPageData.ebook_url;
-                            break;
-                        case 'purchased_but_unavailable':
-                            msgUnavailable.style.display = 'block';
-                            break;
-                        default:
-                            btnBuy.style.display = 'block';
-                            btnBuy.dataset.link = productPageData.ebook_url;
-                            break;
-                    }
-                }
-            }
-
-            if (radioEbook && radioBook) {
-                radioEbook.addEventListener('change', updateUI);
-                radioBook.addEventListener('change', updateUI);
-            }
-            if (btnBuy) {
-                btnBuy.addEventListener('click', function() {
-                    if (this.dataset.link) window.location.href = this.dataset.link;
-                });
-            }
-
-            initializeStaticData();
-            updateUI();
+/**
+ * Carga centralizada de estilos y scripts.
+ */
+add_action( 'wp_enqueue_scripts', function() {
+    // Estilos
+    wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
+    wp_enqueue_style( 'tutorstarter-child-style',
+        get_stylesheet_uri(),
+        ['parent-style'], // ¡Esta es la línea que faltaba!
+        wp_get_theme()->get('Version') // Usa la versión del tema para el cache busting.
+    );
+    if ( is_product() ) {
+        $custom_css_path = get_stylesheet_directory() . '/css/custom-product-page.css';
+        if (file_exists($custom_css_path)) {
+            wp_enqueue_style(
+                'custom-product-page-style',
+                get_stylesheet_directory_uri() . '/css/custom-product-page.css',
+                ['parent-style'],
+                filemtime($custom_css_path)
+            );
         }
     }
 
-    /**
-     * Lógica #2: Para la tienda, archivos y páginas de producto simple (AJAX).
-     */
-    function updateDynamicPrices() {
-        if (typeof theme_ajax_object === 'undefined') return;
-        // No ejecutar AJAX en páginas de producto variable.
-        if (body.classList.contains('single-product') && typeof productPageData !== 'undefined') return;
+    // Script principal (main.js)
+    $main_script_path = get_stylesheet_directory() . '/assets/js/main.js';
+    if (file_exists($main_script_path)) {
+        wp_enqueue_script(
+            'tutorstarter-child-main-script',
+            get_stylesheet_directory_uri() . '/assets/js/main.js',
+            ['jquery'], // Dependencia añadida por buena práctica
+            filemtime($main_script_path),
+            true
+        );
 
-        const productIds = new Set();
-        
-        // 1. Buscar productos en la tienda/archivos
-        document.querySelectorAll('.product[class*="post-"]').forEach(el => {
-            const idMatch = el.className.match(/post-(\d+)/);
-            if (idMatch && idMatch[1]) productIds.add(idMatch[1]);
-        });
-        
-        // 2. Buscar el producto en una página de producto simple
-        if (body.classList.contains('single-product')) {
-            const idMatch = body.className.match(/postid-(\d+)/);
-            if (idMatch && idMatch[1]) productIds.add(idMatch[1]);
-        }
-        
-        if (productIds.size === 0) return;
-
-        const formData = new FormData();
-        formData.append('action', 'get_subscriber_prices');
-        formData.append('security', theme_ajax_object.nonce);
-        Array.from(productIds).forEach(id => formData.append('product_ids[]', id));
-        
-        fetch(theme_ajax_object.ajax_url, { method: 'POST', body: formData })
-        .then(response => response.json())
-        .then(response => {
-            if (response.success && response.data) {
-                for (const productId in response.data) {
-                    const productData = response.data[productId];
-                    
-                    // --- SELECTOR DE PRECIO A PRUEBA DE FALLOS ---
-                    const productWrapper = document.querySelector(`.post-${productId}`);
-                    if (productWrapper) {
-                        // WooCommerce usa 'p.price' en la página de producto simple y '.price' en la tienda.
-                        // Al buscar ambos, nos aseguramos de encontrarlo.
-                        const priceElement = productWrapper.querySelector('p.price, .price');
-                        if (priceElement) {
-                            priceElement.innerHTML = productData.price_html;
-                        }
-                    }
-                }
-            }
-        })
-        .catch(error => console.error('Error al actualizar precios:', error));
+        // ¡CORRECCIÓN CRÍTICA! Pasamos los datos para AJAX con el nonce correcto.
+        // El nonce debe usar guion bajo ('_') para coincidir con el que el plugin verifica.
+        wp_localize_script(
+            'tutorstarter-child-main-script',
+            'theme_ajax_object',
+            [
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce'    => wp_create_nonce('subscriber_prices_nonce') // <--- CORREGIDO
+            ]
+        );
     }
-    
-    // Ejecutar ambas lógicas.
-    handleVariableProductPage();
-    updateDynamicPrices();
 });
+
+/**
+ * Funcionalidades adicionales del tema (sin cambios).
+ */
+add_action('wp_head', function() {
+    if (is_page(25741)) {
+        echo '
+        <link rel="preload" href="https://player-vz-6ba217d2-450.tv.pandavideo.com.br/embed/css/styles.css" as="style">
+        <link rel="prerender" href="https://player-vz-6ba217d2-450.tv.pandavideo.com.br/embed/?v=1e7155cb-cc4f-430f-b7f4-3f73176ee226">
+        <link rel="preload" href="https://player-vz-6ba217d2-450.tv.pandavideo.com.br/embed/js/hls.js" as="script">
+        <link rel="preload" href="https://player-vz-6ba217d2-450.tv.pandavideo.com.br/embed/js/plyr.polyfilled.min.js" as="script">
+        <link rel="dns-prefetch" href="https://b-vz-6ba217d2-450.tv.pandavideo.com.br">
+        <link rel="dns-prefetch" href="https://player-vz-6ba217d2-450.tv.pandavideo.com.br">';
+    }
+});
+
+add_action('login_enqueue_scripts', function() {
+    echo '<style type="text/css">
+        #login h1 a, .login h1 a {
+            background-image: url(' . esc_url(get_stylesheet_directory_uri()) . '/uploads/2023/11/TAXES4PROS-2-1.svg);
+            height:65px; width:320px; background-size: 320px 65px;
+            background-repeat: no-repeat; padding-bottom: 30px;
+        }
+    </style>';
+});
+
+add_action('init', function() {
+    global $pagenow;
+    if ( !is_admin() && $pagenow === 'wp-login.php' && isset($_GET['action']) && $_GET['action'] === 'register') {
+        wp_redirect(home_url('/cuenta/'));
+        exit;
+    }
+});
+
+// El endpoint AJAX que estaba aquí ha sido eliminado para evitar conflictos con el plugin.
